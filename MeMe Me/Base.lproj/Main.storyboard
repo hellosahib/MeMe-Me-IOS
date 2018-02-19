@@ -107,13 +107,13 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="UIToolBar" destination="gZk-MR-7id" id="Jyd-p5-XEA"/>
-                        <outlet property="UIToolBarTop" destination="1dy-tx-eA8" id="uvB-7c-wRG"/>
                         <outlet property="bottomTextArea" destination="flU-a1-IjG" id="Q2R-8r-Sz4"/>
+                        <outlet property="bottomToolBar" destination="gZk-MR-7id" id="Tgx-3W-KAO"/>
                         <outlet property="cameraButton" destination="ANB-77-vaL" id="aZ5-9w-1SS"/>
                         <outlet property="imageView" destination="rh3-dP-jmN" id="Yoo-u8-h2k"/>
                         <outlet property="shareButton" destination="4IT-8N-BN9" id="x2Z-wB-6Dr"/>
                         <outlet property="topTextArea" destination="Uzq-Up-ZDQ" id="29P-GU-BNE"/>
+                        <outlet property="topToolBar" destination="1dy-tx-eA8" id="dI0-3D-wrS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

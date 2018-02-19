@@ -11,11 +11,11 @@ import UIKit
 class ViewController: UIViewController{
     //MARK: Outlets
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var UIToolBarTop: UIToolbar!
+    @IBOutlet weak var topToolBar: UIToolbar!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
     @IBOutlet weak var topTextArea: UITextField!
     @IBOutlet weak var bottomTextArea: UITextField!
-    @IBOutlet weak var UIToolBar: UIToolbar!
+    @IBOutlet weak var bottomToolBar: UIToolbar!
     @IBOutlet weak var shareButton : UIBarButtonItem!
     
     struct Meme {
@@ -27,11 +27,9 @@ class ViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        shareButton.isEnabled=false
-    topTextArea.defaultTextAttributes=memeTextAttributes
-    bottomTextArea.defaultTextAttributes=memeTextAttributes
-        topTextArea.textAlignment = .center
-        bottomTextArea.textAlignment = .center
+        initialview()
+        configureTextField(textfield: topTextArea, intext: "TOP")
+        configureTextField(textfield: bottomTextArea, intext: "BOTTOM")
     }
     override func viewWillAppear(_ animated: Bool) {
         //This will hide Camera Button if Camera is not there
@@ -40,7 +38,7 @@ class ViewController: UIViewController{
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-    unsubscribeFromKeyboardNotifications()
+        unsubscribeFromKeyboardNotifications()
     }
     
     let memeTextAttributes:[String : Any]=[
@@ -49,6 +47,11 @@ class ViewController: UIViewController{
         NSAttributedStringKey.strokeWidth.rawValue:-5,
     ]
     
+    func configureTextField(textfield : UITextField,intext : String){
+        textfield.defaultTextAttributes=memeTextAttributes
+        textfield.textAlignment = .center
+        textfield.text=intext
+    }
     //MARK: CreateAndSaveImage
     
     func saveimage(){
@@ -58,7 +61,7 @@ class ViewController: UIViewController{
     func generateEditedImage() -> UIImage {
         //Hiding Navigation Bar And Tool Bar
         
-        layoutfit(_test: true)
+        hide(test: true)
         //Getting Image
         
         UIGraphicsBeginImageContext(self.view.frame.size)
@@ -67,23 +70,20 @@ class ViewController: UIViewController{
         UIGraphicsEndImageContext()
         //Again Show Toolbar And Navigation Bar
         
-        layoutfit(_test: false)
+        hide(test: false)
         
         return editedImage
     }
     
-    func layoutfit(_test : Bool){
-        navigationController?.setNavigationBarHidden(_test, animated: false)
-        UIToolBar.isHidden=_test
-        UIToolBarTop.isHidden=_test
+    func hide(test : Bool){
+        navigationController?.setNavigationBarHidden(test, animated: false)
+        topToolBar.isHidden=test
+        bottomToolBar.isHidden=test
     }
     
     func initialview(){
-        topTextArea.text="TOP"
-        bottomTextArea.text="BOTTOM"
         imageView.image=nil
         shareButton.isEnabled=false
-        
     }
     
     //MARK: IBAction
@@ -96,6 +96,8 @@ class ViewController: UIViewController{
     }
     @IBAction func cancelButton(_ sender: Any) {
         initialview()
+        configureTextField(textfield: topTextArea, intext: "TOP")
+        configureTextField(textfield: bottomTextArea, intext: "BOTTOM")
     }
     
 }
@@ -109,19 +111,25 @@ extension ViewController : UIImagePickerControllerDelegate,UINavigationControlle
     }
     func unsubscribeFromKeyboardNotifications() {
         
-        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self,name: .UIKeyboardWillHide,object:nil)
+        NotificationCenter.default.removeObserver(self)
     }
     
     //This Function Only Works For BottomTextArea
     @objc func keyboardWillShow(_ notification:Notification) {
-        if bottomTextArea.isFirstResponder
-        {view.frame.origin.y -= getKeyboardHeight(notification)}
+        if (bottomTextArea.isFirstResponder)
+        {
+            view.frame.origin.y -= getKeyboardHeight(notification)
+            
+        }
     }
     @objc func returnKeyboardBack(){
-        if bottomTextArea.isFirstResponder
-        {view.frame.origin.y=0}
+        if (bottomTextArea.isFirstResponder)
+        {
+            view.frame.origin.y=0
+            
+        }
     }
+    
     func getKeyboardHeight(_ notification:Notification) -> CGFloat {
         
         let userInfo = notification.userInfo
@@ -129,22 +137,19 @@ extension ViewController : UIImagePickerControllerDelegate,UINavigationControlle
         return keyboardSize.cgRectValue.height
     }
     //MARK: ImagePicker
-    //Functions To Implement UIImagePickerController For Photos and Camera
-    @IBAction func imagePickerAlbum(_ sender: Any) {
+    //Functions To Implement UIImagePickerController For Photos and Camera(Combined)
+    @IBAction func imagePickerAlbum(_ sender: AnyObject) {
         let controller = UIImagePickerController()
         controller.delegate=self
-        controller.sourceType = .photoLibrary
+        if(sender.tag==0){
+            controller.sourceType = .photoLibrary
+        }
+        else {
+            controller.sourceType = .camera
+        }
         controller.allowsEditing=true
         present(controller, animated: true, completion: nil)
     }
-    @IBAction func imagePickerCamera(_sender : Any){
-        let controller = UIImagePickerController()
-        controller.delegate=self
-        controller.sourceType = .camera
-        controller.allowsEditing=true
-        present(controller, animated: true, completion: nil)
-    }
-    
     //MARK:ImagePickerCancelled
     //Dismiss the UIImagePicker Controller On Cancel
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -153,21 +158,24 @@ extension ViewController : UIImagePickerControllerDelegate,UINavigationControlle
     //MARK: ImagePickerController
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
-        print("Hello World")
         shareButton.isEnabled=true
-        if let image=info[UIImagePickerControllerOriginalImage] as? UIImage{
+        if let image=info[UIImagePickerControllerOriginalImage] as? UIImage
+        {
             imageView.image = image
-            dismiss(animated: true, completion: nil)}
+            dismiss(animated: true, completion: nil)
+        }
     }
-    
 }
 
 extension ViewController : UITextFieldDelegate {
     //MARK: TextFieldDelegates
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField.text=="TOP" || textField.text=="BOTTOM"
-        {textField.text=""}
+        if (textField.text=="TOP" || textField.text=="BOTTOM")
+        {
+            textField.text=""
+            
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
