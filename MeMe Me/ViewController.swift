@@ -43,8 +43,9 @@ class ViewController: UIViewController{
     
     let memeTextAttributes:[String : Any]=[
         NSAttributedStringKey.strokeColor.rawValue:UIColor.black,
-        NSAttributedStringKey.foregroundColor.rawValue : UIColor.black,
-        NSAttributedStringKey.strokeWidth.rawValue:-5,
+        NSAttributedStringKey.foregroundColor.rawValue : UIColor.white,
+        NSAttributedStringKey.strokeWidth.rawValue:0,
+        NSAttributedStringKey.font.rawValue:UIFont(name : "Helvetica-Bold", size: 30)!
     ]
     
     func configureTextField(textfield : UITextField,intext : String){
@@ -52,26 +53,23 @@ class ViewController: UIViewController{
         textfield.textAlignment = .center
         textfield.text=intext
     }
+    
     //MARK: CreateAndSaveImage
     
     func saveimage(){
-        let meme = Meme(topText: topTextArea.text!, bottomText: bottomTextArea.text!, orignalImage: imageView.image!, EditedImage: generateEditedImage())
+        _ = Meme(topText: topTextArea.text!, bottomText: bottomTextArea.text!, orignalImage: imageView.image!, EditedImage: generateEditedImage())
     }
     
     func generateEditedImage() -> UIImage {
         //Hiding Navigation Bar And Tool Bar
-        
         hide(test: true)
         //Getting Image
-        
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
         let editedImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         //Again Show Toolbar And Navigation Bar
-        
         hide(test: false)
-        
         return editedImage
     }
     
@@ -91,6 +89,10 @@ class ViewController: UIViewController{
     @IBAction func saveButton(_ sender: Any) {
         let image = generateEditedImage()
         let controller = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        controller.completionWithItemsHandler = {
+            (activitytype,completed,items,error) in
+                self.saveimage()
+        }
         present(controller, animated: true, completion: nil)
         
     }
@@ -110,23 +112,18 @@ extension ViewController : UIImagePickerControllerDelegate,UINavigationControlle
         NotificationCenter.default.addObserver(self, selector: #selector(returnKeyboardBack), name: .UIKeyboardWillHide, object: nil)
     }
     func unsubscribeFromKeyboardNotifications() {
-        
         NotificationCenter.default.removeObserver(self)
     }
     
     //This Function Only Works For BottomTextArea
     @objc func keyboardWillShow(_ notification:Notification) {
-        if (bottomTextArea.isFirstResponder)
-        {
+        if (bottomTextArea.isFirstResponder) {
             view.frame.origin.y -= getKeyboardHeight(notification)
-            
         }
     }
     @objc func returnKeyboardBack(){
-        if (bottomTextArea.isFirstResponder)
-        {
+        if (bottomTextArea.isFirstResponder) {
             view.frame.origin.y=0
-            
         }
     }
     
@@ -138,13 +135,12 @@ extension ViewController : UIImagePickerControllerDelegate,UINavigationControlle
     }
     //MARK: ImagePicker
     //Functions To Implement UIImagePickerController For Photos and Camera(Combined)
-    @IBAction func imagePickerAlbum(_ sender: AnyObject) {
+    @IBAction func imagePicker(_ sender: AnyObject) {
         let controller = UIImagePickerController()
         controller.delegate=self
-        if(sender.tag==0){
+        if(sender.tag==0) {
             controller.sourceType = .photoLibrary
-        }
-        else {
+        } else {
             controller.sourceType = .camera
         }
         controller.allowsEditing=true

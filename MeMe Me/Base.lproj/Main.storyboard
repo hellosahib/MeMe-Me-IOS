@@ -9,6 +9,11 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue-Bold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -22,9 +27,9 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="559"/>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="BOTTOM" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="flU-a1-IjG">
-                                <rect key="frame" x="16" y="576" width="343" height="26"/>
+                                <rect key="frame" x="16" y="566" width="343" height="36"/>
                                 <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" returnKeyType="done"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="6WP-Bt-FPb"/>
@@ -38,15 +43,15 @@
                                 </constraints>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Vli-lX-np5"/>
-                                    <barButtonItem systemItem="camera" id="ANB-77-vaL">
+                                    <barButtonItem tag="1" systemItem="camera" id="ANB-77-vaL">
                                         <connections>
-                                            <action selector="imagePickerCameraWith_sender:" destination="BYZ-38-t0r" id="MW0-sv-2Wp"/>
+                                            <action selector="imagePicker:" destination="BYZ-38-t0r" id="RP7-A4-Kcf"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="rdp-06-iqv"/>
                                     <barButtonItem title="Album" id="0zY-rz-XPA">
                                         <connections>
-                                            <action selector="imagePickerAlbum:" destination="BYZ-38-t0r" id="HEH-ia-9fb"/>
+                                            <action selector="imagePicker:" destination="BYZ-38-t0r" id="KW8-A4-mIb"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="nxo-DM-jWk"/>
@@ -73,9 +78,9 @@
                                 </items>
                             </toolbar>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="TOP" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uzq-Up-ZDQ">
-                                <rect key="frame" x="16" y="101" width="343" height="26"/>
+                                <rect key="frame" x="16" y="101" width="343" height="36"/>
                                 <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="30"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="allCharacters" returnKeyType="done" textContentType="name"/>
                                 <connections>
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="cfU-rG-jjs"/>
