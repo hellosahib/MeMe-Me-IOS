@@ -90,12 +90,15 @@ class ViewController: UIViewController{
         let controller = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         controller.completionWithItemsHandler = {
             (activitytype,completed,items,error) in
+            if completed {
                 self.saveimage(memedImage: image)
+            }
         }
         present(controller, animated: true, completion: nil)
         
     }
     @IBAction func cancelButton(_ sender: Any) {
+        //Cancels The View To Default Values
         initialview()
         configureTextField(textfield: topTextArea, intext: "TOP")
         configureTextField(textfield: bottomTextArea, intext: "BOTTOM")
