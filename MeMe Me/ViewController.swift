@@ -44,7 +44,7 @@ class ViewController: UIViewController{
     let memeTextAttributes:[String : Any]=[
         NSAttributedStringKey.strokeColor.rawValue:UIColor.black,
         NSAttributedStringKey.foregroundColor.rawValue : UIColor.white,
-        NSAttributedStringKey.strokeWidth.rawValue:0,
+        NSAttributedStringKey.strokeWidth.rawValue:-5,
         NSAttributedStringKey.font.rawValue:UIFont(name : "Helvetica-Bold", size: 30)!
     ]
     
@@ -56,27 +56,26 @@ class ViewController: UIViewController{
     
     //MARK: CreateAndSaveImage
     
-    func saveimage(){
-        _ = Meme(topText: topTextArea.text!, bottomText: bottomTextArea.text!, orignalImage: imageView.image!, EditedImage: generateEditedImage())
+    func saveimage(memedImage : UIImage){
+        _ = Meme(topText: topTextArea.text!, bottomText: bottomTextArea.text!, orignalImage: imageView.image!, EditedImage: memedImage)
     }
     
     func generateEditedImage() -> UIImage {
         //Hiding Navigation Bar And Tool Bar
-        hide(test: true)
+        hide(value: true)
         //Getting Image
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
         let editedImage : UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         //Again Show Toolbar And Navigation Bar
-        hide(test: false)
+        hide(value: false)
         return editedImage
     }
     
-    func hide(test : Bool){
-        navigationController?.setNavigationBarHidden(test, animated: false)
-        topToolBar.isHidden=test
-        bottomToolBar.isHidden=test
+    func hide(value : Bool){
+        topToolBar.isHidden=value
+        bottomToolBar.isHidden=value
     }
     
     func initialview(){
@@ -91,7 +90,7 @@ class ViewController: UIViewController{
         let controller = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         controller.completionWithItemsHandler = {
             (activitytype,completed,items,error) in
-                self.saveimage()
+                self.saveimage(memedImage: image)
         }
         present(controller, animated: true, completion: nil)
         
@@ -140,10 +139,12 @@ extension ViewController : UIImagePickerControllerDelegate,UINavigationControlle
         controller.delegate=self
         if(sender.tag==0) {
             controller.sourceType = .photoLibrary
+            controller.allowsEditing=true
+
         } else {
             controller.sourceType = .camera
+            controller.allowsEditing=false
         }
-        controller.allowsEditing=true
         present(controller, animated: true, completion: nil)
     }
     //MARK:ImagePickerCancelled
